@@ -1,0 +1,15 @@
+query posts {
+  posts(order_by: { id: asc }) {
+    id
+    post
+    user_id
+    user {
+      address
+      age
+      gender
+      id
+      name
+      occupation
+    }
+  }
+}

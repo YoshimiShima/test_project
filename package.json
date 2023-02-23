@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxt/types": "^2.16.0",
+    "@nuxtjs/apollo": "^5.0.0-alpha.5",
+    "@types/node": "^18.14.1",
+    "naive-ui": "^2.34.3",
+    "nuxt": "^3.2.2",
+    "vfonts": "^0.0.3"
+  },
+  "dependencies": {
+    "@css-render/vue3-ssr": "^0.15.12",
+    "@nuxt/kit": "^3.2.2",
+    "pug": "^3.0.2"
+  }
+}
