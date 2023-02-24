@@ -8,8 +8,6 @@ import {
 
 import ProvideData from '../components/ProvideData.vue'
 
-// import ApolloClient from 'apollo-boost'
-
 import UserQuery from '../apollo/UserQuery.gql'
 import PostQuery from '../apollo/PostQuery.gql'
 import InsertUser from '../apollo/InsertUser.gql'
@@ -43,14 +41,14 @@ const PostInput = ref({
   post: ''
 });
 
-const variables = {
-  id: UserInput.value,
-  name: UserInput.value,
-  age: UserInput.value,
-  gender: UserInput.value,
-  address: UserInput.value,
-  occupation: UserInput.value
-}
+// const variables = (UserInput.value)
+  // id: UserInput.value,
+  // name: UserInput.value,
+  // age: UserInput.value,
+  // gender: UserInput.value,
+  // address: UserInput.value,
+  // occupation: UserInput.value
+
 //   post: PostInput.value
 // };
 
@@ -65,27 +63,29 @@ const load_data = (async() => {
   }
 
 })
+// const load_data = (async() => {
+//   const { data } = await useAsyncQuery(query)
+//   if(data.value?.users){
+//     users.value = data.value.users
+//   }
+// })
 
+const { mutate: insertUser } = useMutation(InsertUser)
+const { mutate: insertPost } = useMutation(InsertPost)
 
-// const save = async () => {
-//   const { mutate, refetchQueries } = useMutation(InsertUser)
-//   const { data } = await mutate({ input: UserInput.value })
-//   await refetchQueries([{ query: UserQuery }])
-// }
-
-const { mutate } = useMutation(InsertUser, { variables })
-  console.log(UserQuery.value)
 // const { mutate: post } = useMutation(InsertPost, PostInput);
 //   (async () => {
 //     refetchQueries: PostQuery
 //   })();
 
-const save = (async () => {
-  const result = await mutate(InsertUser)
-    refetchQueries: UserQuery
-})();
-
-
+const save = async () => {
+  const userResult = await insertUser( {data:UserInput.value })
+  console.log("user result", userResult)
+  const postResult = await insertPost({ data:PostInput.value })
+  console.log("post result", postResult)
+  // const result = await mutate({ variables })
+  //   refetchQueries: UserQuery
+}
 
 load_data
 

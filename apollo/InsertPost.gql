@@ -1,4 +1,7 @@
-mutation ($input: PostInput!) {
-  insert_posts(objects: { post: $post})
-    post
+mutation insert_posts($data: posts_insert_input!) {
+  insert_posts(
+    objects: [$data]
+    ){
+    returning {id}
+  }
 }
