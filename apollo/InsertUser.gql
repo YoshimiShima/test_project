@@ -1,5 +1,5 @@
 mutation($input: UserInput!){
-  insertUser(name: $name, age: $age, id: $id, gender: $gender, address: $address, occupation: $occupation, post: $post)
+  insert_user(name: $name, age: $age, id: $id, gender: $gender, address: $address, occupation: $occupation, post: $post)
     name
     age
     id

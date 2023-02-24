@@ -87,8 +87,69 @@ load_data
 
 </script>
 
-<template lang="pug">
-NConfigProvider
+<template>
+  <NConfigProvider inline-theme-disabled>
+    <NMessageProvider>
+      <NNotificationProvider>
+        <ProvideData />
+  <div>
+    <h1>input form</h1>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>name</th>
+        <th>age</th>
+        <th>gender</th>
+        <th>occupation</th>
+        <th>address</th>
+        <th>post</th>
+        <th>edit</th>
+      </tr>
+        <tr v-for="(user,index) in users">
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.age }}</td>
+          <td>{{ user.gender }}</td>
+          <td>{{ user.occupation }}</td>
+          <td>{{ user.address }}</td>
+          <tr v-for="(post,index) in user.posts">
+            <td>{{ post.post }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+      </tr>
+    </table>
+    <button @click="load_data()">query</button>
+      <h2>Insert User</h2>
+      <div>
+        <div>
+          <input v-model="UserInput.id" type="number" placeholder="id" />
+        </div>
+        <div>
+          <input v-model="UserInput.name" type="text" placeholder="name" />
+        </div>
+        <div>
+          <input v-model="UserInput.age" type="number" placeholder="age" />
+        </div>
+        <div>
+          <input v-model="UserInput.gender" type="text" placeholder="gender" />
+        </div>
+        <div>
+          <input v-model="UserInput.occupation" type="text" placeholder="occupation" />
+        </div>
+        <div>
+          <input v-model="UserInput.address" type="text" placeholder="address" />
+        </div>
+        <div>
+          <textarea v-model="UserInput.posts" cols="30" rows="10" type="text" placeholder="post"></textarea>
+        </div>
+      </div>
+      <button @click="save">save</button>
+  </div>
+      </NNotificationProvider>
+    </NMessageProvider>
+  </NConfigProvider>
+<!-- NconfigProvider
   NMessageProvider
     NNotificationProvider
       h1 input form
@@ -114,9 +175,9 @@ NConfigProvider
             td {{ post.post }}
             td
             td
-      button(@click='load_data()') query
-    //- button(@click="editUser(user)") edit
-    //- button(@click="deleteUser(user)") delete
+      button(@click='load_data()') query -->
+      <!-- button(@click="editUser(user)") edit
+      button(@click="deleteUser(user)") delete
 
   div
     h2 Insert User
@@ -135,13 +196,7 @@ NConfigProvider
       div
         textarea(v-model='UserInput.post', cols="30", rows="10", type='text', placeholder='post')
       div
-        button(@click='save') save
-
-
-        //- ul
-        //-   li(v-for='(user,index) in users') {{ user.id }} : {{ user.name }}
-        //- ul
-        //-   li(v-for='(post,index) in posts') {{ post.user_id }} : {{ post.post }}
+        button(@click='save') save -->
 
 
 </template>
