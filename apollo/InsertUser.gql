@@ -1,19 +1,29 @@
-mutation($input: UserInput!){
-  insert_users(name: $name, age: $age, id: $id, gender: $gender, address: $address, occupation: $occupation)
-    name
-    age
-    id
-    gender
-    address
-    occupation
+mutation InsertUser($input: UserInput!) {
+  insert_user(
+    objects: {
+      id: $id
+      name: $name
+      age: $age
+      gender: $gender
+      address: $address
+      occupation: $occupation
+    }
+  )
+  returning
+  name
+  age
+  id
+  gender
+  address
+  occupation
 
-    # returning {
-    #   id
-    #   name
-    #   age
-    #   gender
-    #   address
-    #   occupation
-    # }
+  # returning {
+  #   id
+  #   name
+  #   age
+  #   gender
+  #   address
+  #   occupation
+  # }
 }
 

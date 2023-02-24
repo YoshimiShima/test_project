@@ -14,7 +14,6 @@ import UserQuery from '../apollo/UserQuery.gql'
 import PostQuery from '../apollo/PostQuery.gql'
 import InsertUser from '../apollo/InsertUser.gql'
 import InsertPost from '../apollo/InsertPost.gql'
-import { SocketAddress } from 'net'
 
 
 interface User {
@@ -45,13 +44,13 @@ const PostInput = ref({
 });
 
 const variables = {
-  id: UserInput.value,
-  name: UserInput.value,
-  age: UserInput.value,
-  gender: UserInput.value,
-  address: UserInput.value,
-  occupation: UserInput.value,
-  post: PostInput.value
+  id: 11,
+  // name: UserInput.value,
+  // age: UserInput.value,
+  // gender: UserInput.value,
+  // address: UserInput.value,
+  // occupation: UserInput.value,
+  // post: PostInput.value
 };
 
 const load_data = (async() => {
@@ -66,25 +65,25 @@ const load_data = (async() => {
 
 })
 
-// const { mutate, refetchQueries } = useMutation(InsertUser)
 
 // const save = async () => {
 //   const { mutate, refetchQueries } = useMutation(InsertUser)
 //   const { data } = await mutate({ input: UserInput.value })
 //   await refetchQueries([{ query: UserQuery }])
 // }
-const save = (async () => {
-  const { mutate: user } = useMutation(InsertUser, UserInput);
-    (async () => {
-      refetchQueries: UserQuery
-    })();
-  const { mutate: post } = useMutation(InsertPost, PostInput);
-    (async () => {
-      refetchQueries: PostQuery
-    })();
+
+const { mutate } = useMutation(UserQuery, { variables })
   console.log(UserQuery.value)
-  console.log(PostInput.value)
-})
+// const { mutate: post } = useMutation(InsertPost, PostInput);
+//   (async () => {
+//     refetchQueries: PostQuery
+//   })();
+
+const save = (async () => {
+  const result = await mutate(InsertUser)
+    refetchQueries: UserQuery
+})();
+
 
 
 load_data
