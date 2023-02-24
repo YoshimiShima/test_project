@@ -1,32 +1,3 @@
-<template>
-<!-- //- NForm(ref='formRef', :model='model', :rules='rules')
-//-   NFormItem(label='name', path='name', required='')
-//-     NInput(v-model:value='model.name', placeholder='input your full name', width='200px')
-//-   NFormItem(label='email', path='email', required='')
-//-     NInput(v-model:value='model.email', placeholder='input your email')
-//-   NFormItem(label='mobile-phone', path='mobile', required='')
-//-     NInput(v-model:value='model.mobile', placeholder='input your mobile phone number without hyphens')
-//-   NFormItem(label='birthday', path='birthDate', required='')
-//-     NDatePicker(v-model:value='model.birthDate', type='date', placeholder='choose your birthday')
-//-   NButton(type='primary', @click='submitForm')| send -->
-
-  <NForm ref="formRef" :model="model" :rules="rules">
-      <NFormItem label="name" path="name" required>
-          <NInput v-model:value="model.name" placeholder="input your full name" width="200px"></NInput>
-      </NFormItem>
-      <NFormItem label="email" path="email" required>
-          <NInput v-model:value="model.email" placeholder="input your email"></NInput>
-      </NFormItem>
-      <NFormItem label="mobile-phone" path="mobile" required>
-          <NInput v-model:value="model.mobile" placeholder="input your mobile phone number without hyphens"></NInput>
-      </NFormItem>
-      <NFormItem label="birthday" path="birthDate" required>
-          <NDatePicker v-model:value="model.birthDate" type="date" placeholder="choose your birthday"></NDatePicker>
-      </NFormItem>
-      <NButton type="primary" @click="submitForm"> send</NButton>
-  </NForm>
-</template>
-
 <script lang="ts" setup>
 import { ref } from 'vue';
 import {
@@ -136,6 +107,35 @@ const submitForm = () => {
   });
 };
 </script>
+
+<template>
+  <!-- //- NForm(ref='formRef', :model='model', :rules='rules')
+  //-   NFormItem(label='name', path='name', required='')
+  //-     NInput(v-model:value='model.name', placeholder='input your full name', width='200px')
+  //-   NFormItem(label='email', path='email', required='')
+  //-     NInput(v-model:value='model.email', placeholder='input your email')
+  //-   NFormItem(label='mobile-phone', path='mobile', required='')
+  //-     NInput(v-model:value='model.mobile', placeholder='input your mobile phone number without hyphens')
+  //-   NFormItem(label='birthday', path='birthDate', required='')
+  //-     NDatePicker(v-model:value='model.birthDate', type='date', placeholder='choose your birthday')
+  //-   NButton(type='primary', @click='submitForm')| send -->
+
+<NForm ref="formRef" :model="model" :rules="rules">
+  <NFormItem label="name" path="name" required>
+    <NInput v-model:value="model.name" placeholder="input your full name" width="200px"></NInput>
+  </NFormItem>
+  <NFormItem label="email" path="email" required>
+    <NInput v-model:value="model.email" placeholder="input your email"></NInput>
+  </NFormItem>
+  <NFormItem label="mobile-phone" path="mobile" required>
+    <NInput v-model:value="model.mobile" placeholder="input your mobile phone number without hyphens"></NInput>
+  </NFormItem>
+  <NFormItem label="birthday" path="birthDate" required>
+    <NDatePicker v-model:value="model.birthDate" type="date" placeholder="choose your birthday"></NDatePicker>
+  </NFormItem>
+    <NButton type="primary" @click="submitForm"> send</NButton>
+</NForm>
+  </template>
 
 <style>
 .NInput {

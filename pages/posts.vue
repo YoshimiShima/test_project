@@ -14,10 +14,6 @@ import UserQuery from '../apollo/UserQuery.gql'
 import PostQuery from '../apollo/PostQuery.gql'
 import InsertUser from '../apollo/InsertUser.gql'
 
-
-const users = ref([])
-const posts = ref([])
-
 interface User {
   id: number | null;
   name: string | null;
@@ -29,6 +25,19 @@ interface User {
 interface Post {
   post: string | null;
 }
+
+const users = ref([])
+const posts = ref([])
+
+const UserInput = ref({
+  id: '',
+  name: '',
+  age: '',
+  gender: '',
+  occupation: '',
+  address: '',
+  posts: '',
+});
 
 // const editedUser: User = {
 //   id: null,
@@ -54,32 +63,19 @@ const load_data = (async() => {
 
 })
 
-load_data()
-
-const variables = ref({
-  id: '',
-  name: '',
-  age: '',
-  gender: '',
-  occupation: '',
-  address: '',
-  posts: '',
-});
-
-const { mutate, refetchQueries } = useMutation(InsertUser)
+// const { mutate, refetchQueries } = useMutation(InsertUser)
 
 const save = async () => {
-  const { data } = await mutate({ input: variables.value })
-  console.log('Mutation result:', data)
+  const { mutate, refetchQueries } = useMutation(InsertUser)
+  const { data } = await mutate({ input: UserInput.value })
   await refetchQueries([{ query: UserQuery }])
-  console.log(InsertUser)
-  console.log(data)
 }
+load_data
 
 // const apolloClient = provideApolloClient()
 // provide('apollo', apolloClient)
 
-// const { mutate } = useMutation(InsertUser, { variables });
+// const { mutate } = useMutation(InsertUser, { UserInput });
 //   (async () => {
 //     try {
 //       const { data } = await mutate();
@@ -97,48 +93,49 @@ NConfigProvider
     NNotificationProvider
       h1 input form
       ProvideData
-#query
-  button(@click='load_data()') query
-  tr
-    th ID
-    th name
-    th age
-    th gender
-    th occupation
-    th address
-    th post
-    th edit
-  tr(v-for='(user,index) in users')
-    td {{ user.id }}
-    td {{ user.name }}
-    td {{ user.age }}
-    td {{ user.gender }}
-    td {{ user.occupation }}
-    td {{ user.address }}
-    tr(v-for='(post,index) in user.posts')
-      td {{ post.post }}
-    td
-      button(@click="editUser(user)") edit
-      button(@click="deleteUser(user)") delete
+      table
+        tr
+          th ID
+          th name
+          th age
+          th gender
+          th occupation
+          th address
+          th post
+          th edit
+        tr(v-for='(user,index) in users')
+          td {{ user.id }}
+          td {{ user.name }}
+          td {{ user.age }}
+          td {{ user.gender }}
+          td {{ user.occupation }}
+          td {{ user.address }}
+          tr(v-for='(post,index) in user.posts')
+            td {{ post.post }}
+            td
+            td
+      button(@click='load_data()') query
+    //- button(@click="editUser(user)") edit
+    //- button(@click="deleteUser(user)") delete
 
   div
     h2 Insert User
-    div
-      input(v-model='variables.id', type='number', placeholder='id')
-    div
-      input(v-model='variables.name', type='text', placeholder='name')
-    div
-      input(v-model='variables.age', type='number', placeholder='age')
-    div
-      input(v-model='variables.gender', type='text', placeholder='gender')
-    div
-      input(v-model='variables.occupation', type='text', placeholder='occupation')
-    div
-      input(v-model='variables.address', type='text', placeholder='address')
-    div
-      textarea(v-model='variables.post', cols="30", rows="10", type='text', placeholder='post')
-    div
-      button(@click='save') save
+      div
+        input(v-model='UserInput.id', type='number', placeholder='id')
+      div
+        input(v-model='UserInput.name', type='text', placeholder='name')
+      div
+        input(v-model='UserInput.age', type='number', placeholder='age')
+      div
+        input(v-model='UserInput.gender', type='text', placeholder='gender')
+      div
+        input(v-model='UserInput.occupation', type='text', placeholder='occupation')
+      div
+        input(v-model='UserInput.address', type='text', placeholder='address')
+      div
+        textarea(v-model='UserInput.post', cols="30", rows="10", type='text', placeholder='post')
+      div
+        button(@click='save') save
 
 
         //- ul

@@ -1,5 +1,5 @@
-mutation insert_users ($input: UserInput!){
-  insert_users(input: $input)
+mutation($input: UserInput!){
+  insertUser(name: $name, age: $age, id: $id, gender: $gender, address: $address, occupation: $occupation, post: $post)
     name
     age
     id
