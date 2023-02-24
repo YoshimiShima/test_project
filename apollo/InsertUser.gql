@@ -1,22 +1,19 @@
 mutation($input: UserInput!){
-  insert_user(name: $name, age: $age, id: $id, gender: $gender, address: $address, occupation: $occupation, post: $post)
+  insert_users(name: $name, age: $age, id: $id, gender: $gender, address: $address, occupation: $occupation)
     name
     age
     id
     gender
     address
     occupation
-    posts {
-      post
-    }
 
-    returning {
-      id
-      name
-      age
-      gender
-      address
-      occupation
-    }
+    # returning {
+    #   id
+    #   name
+    #   age
+    #   gender
+    #   address
+    #   occupation
+    # }
 }
 

@@ -13,6 +13,9 @@ import ProvideData from '../components/ProvideData.vue'
 import UserQuery from '../apollo/UserQuery.gql'
 import PostQuery from '../apollo/PostQuery.gql'
 import InsertUser from '../apollo/InsertUser.gql'
+import InsertPost from '../apollo/InsertPost.gql'
+import { SocketAddress } from 'net'
+
 
 interface User {
   id: number | null;
@@ -36,20 +39,20 @@ const UserInput = ref({
   gender: '',
   occupation: '',
   address: '',
-  posts: '',
+});
+const PostInput = ref({
+  post: ''
 });
 
-// const editedUser: User = {
-//   id: null,
-//   name: null,
-//   age: null,
-//   gender: null,
-//   address: null,
-//   occupation: null
-// };
-// const editedPost: Post = {
-//   post: null
-// };
+const variables = {
+  id: UserInput.value,
+  name: UserInput.value,
+  age: UserInput.value,
+  gender: UserInput.value,
+  address: UserInput.value,
+  occupation: UserInput.value,
+  post: PostInput.value
+};
 
 const load_data = (async() => {
   const userData = await useAsyncQuery(UserQuery)
@@ -65,11 +68,25 @@ const load_data = (async() => {
 
 // const { mutate, refetchQueries } = useMutation(InsertUser)
 
-const save = async () => {
-  const { mutate, refetchQueries } = useMutation(InsertUser)
-  const { data } = await mutate({ input: UserInput.value })
-  await refetchQueries([{ query: UserQuery }])
-}
+// const save = async () => {
+//   const { mutate, refetchQueries } = useMutation(InsertUser)
+//   const { data } = await mutate({ input: UserInput.value })
+//   await refetchQueries([{ query: UserQuery }])
+// }
+const save = (async () => {
+  const { mutate: user } = useMutation(InsertUser, UserInput);
+    (async () => {
+      refetchQueries: UserQuery
+    })();
+  const { mutate: post } = useMutation(InsertPost, PostInput);
+    (async () => {
+      refetchQueries: PostQuery
+    })();
+  console.log(UserQuery)
+  console.log(PostQuery)
+})
+
+
 load_data
 
 // const apolloClient = provideApolloClient()
@@ -95,29 +112,31 @@ load_data
   <div>
     <h1>input form</h1>
     <table>
-      <tr>
-        <th>ID</th>
-        <th>name</th>
-        <th>age</th>
-        <th>gender</th>
-        <th>occupation</th>
-        <th>address</th>
-        <th>post</th>
-        <th>edit</th>
-      </tr>
-        <tr v-for="(user,index) in users">
-          <td>{{ user.id }}</td>
-          <td>{{ user.name }}</td>
-          <td>{{ user.age }}</td>
-          <td>{{ user.gender }}</td>
-          <td>{{ user.occupation }}</td>
-          <td>{{ user.address }}</td>
-          <tr v-for="(post,index) in user.posts">
-            <td>{{ post.post }}</td>
-            <td></td>
-            <td></td>
+      <tbody>
+        <tr>
+          <th>ID</th>
+          <th>name</th>
+          <th>age</th>
+          <th>gender</th>
+          <th>occupation</th>
+          <th>address</th>
+          <th>post</th>
+          <th>edit</th>
         </tr>
-      </tr>
+          <tr v-for="(user,index) in users" :key="user.id">
+            <td>{{ user.id }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.age }}</td>
+            <td>{{ user.gender }}</td>
+            <td>{{ user.occupation }}</td>
+            <td>{{ user.address }}</td>
+            <tr v-for="(post,index) in user.posts">
+              <td>{{ post.post }}</td>
+              <td></td>
+              <td></td>
+          </tr>
+        </tr>
+      </tbody>
     </table>
     <button @click="load_data()">query</button>
       <h2>Insert User</h2>
@@ -141,7 +160,7 @@ load_data
           <input v-model="UserInput.address" type="text" placeholder="address" />
         </div>
         <div>
-          <textarea v-model="UserInput.posts" cols="30" rows="10" type="text" placeholder="post"></textarea>
+          <textarea v-model="PostInput.post" cols="30" rows="10" type="text" placeholder="post"></textarea>
         </div>
       </div>
       <button @click="save">save</button>

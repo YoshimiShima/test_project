@@ -4,7 +4,7 @@ header
     a(href="/") Cartrader
     nav
       NuxtLink(to="./Detail") recommend
-      NuxtLink(to="./posts") posts
+      a(href="./posts") posts
     p.box
 </template>
 

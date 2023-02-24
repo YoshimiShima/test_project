@@ -1,0 +1,4 @@
+mutation ($input: PostInput!) {
+  insert_posts(objects: { post: $post})
+    post
+}
