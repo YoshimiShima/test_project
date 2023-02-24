@@ -44,14 +44,15 @@ const PostInput = ref({
 });
 
 const variables = {
-  id: 11,
-  // name: UserInput.value,
-  // age: UserInput.value,
-  // gender: UserInput.value,
-  // address: UserInput.value,
-  // occupation: UserInput.value,
-  // post: PostInput.value
-};
+  id: UserInput.value,
+  name: UserInput.value,
+  age: UserInput.value,
+  gender: UserInput.value,
+  address: UserInput.value,
+  occupation: UserInput.value
+}
+//   post: PostInput.value
+// };
 
 const load_data = (async() => {
   const userData = await useAsyncQuery(UserQuery)
@@ -72,7 +73,7 @@ const load_data = (async() => {
 //   await refetchQueries([{ query: UserQuery }])
 // }
 
-const { mutate } = useMutation(UserQuery, { variables })
+const { mutate } = useMutation(InsertUser, { variables })
   console.log(UserQuery.value)
 // const { mutate: post } = useMutation(InsertPost, PostInput);
 //   (async () => {
