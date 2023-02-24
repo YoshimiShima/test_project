@@ -82,8 +82,8 @@ const save = (async () => {
     (async () => {
       refetchQueries: PostQuery
     })();
-  console.log(UserQuery)
-  console.log(PostQuery)
+  console.log(UserQuery.value)
+  console.log(PostInput.value)
 })
 
 
