@@ -1,4 +1,5 @@
-<script lang="ts" setup>
+<!-- 参照用に残していますがもう使っていないファイル -->
+- <script lang="ts" setup>
 import {
   NConfigProvider,
   NMessageProvider,
@@ -126,12 +127,16 @@ NConfigProvider
             th email
             th mobile_number
             th birth_date
+            th edit
+            th delete
           tr(v-for='(model,index) in models')
             td {{ model.id }}
             td {{ model.name }}
             td {{ model.email }}
             td {{ model.mobile_number }}
             td {{ model.birth_date }}
+            button(@click="editModel()") edit
+            button(@click="deleteModel()") delete
 
       button(@click='load_data()') query
       button(@click="editModel()") edit
@@ -162,4 +167,4 @@ tr {
 grid-auto-flow: 10px;
 }
 
-</style>
+</style> --> -->

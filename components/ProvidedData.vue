@@ -9,6 +9,7 @@ import {
   // FormInst,
   // FormValidationError,
   NTable,
+  useDialog,
   useMessage,
   // FormRules
 } from 'naive-ui';
@@ -39,6 +40,7 @@ const UserInput = ref<UserType> ({
 
 const formRef = ref<FormInst | null>(null)
 const message = useMessage()
+const dialog = useDialog()
 
 const rules: FormRules = {
   id:[
@@ -156,17 +158,55 @@ const { mutate: deleteUser } = useMutation(DeleteUser);
 //     variables: { id },
 //   });
 // }
-const delete_user = async (user) => {
-  const deleteResult = await deleteUser({
-    variables: { id: user.value.id }
+const handleButtonClick = async (user) => {
+  const choseResult = await dialog.success({
+    title: 'Delete User',
+    content: 'Are you sure?',
+    positiveText: 'Yes',
+    negativeText: 'No',
+    maskClosable: false
   })
-  console.log("delete result", deleteResult)
+  console.log(user.id)
+    if (choseResult === 'Yes') {
+    try {
+      const deleteResult = await deleteUser(user.id)
+      console.log("delete result", deleteResult)
+      message.success('User deleted successfully')
+    } catch (error) {
+      console.error(error)
+      message.error('Failed to delete user')
+    }
+  }
 }
 
 
 </script>
 
 <template lang="pug">
+.resultView
+  h1 Users
+  NButton(type='primary', dashed='', @click='load_data()') show
+  NTable(:bordered='true', :single-line='true')
+    thead
+      tr
+        th ID
+        th NAME
+        th EMAIL
+        th MOBILE NUMBER
+        th AGE
+        th --EDIT--  /  ==delete==
+    tbody
+      tr(v-for='(user,index) in users')
+        td {{ user.id }}
+        td {{ user.name }}
+        td {{ user.email }}
+        td {{ user.mobile }}
+        td {{ user.age }}
+        .nButton
+          NButton(type='warning', @click='update_user')  update
+          NButton(type='error', @click='handleButtonClick(user)')  delete
+
+
 .inputForm
   h1 Input Form
   NForm(ref='formRef', :model='UserInput', :rules='rules')
@@ -180,29 +220,9 @@ const delete_user = async (user) => {
       NInput(v-model:value='UserInput.mobile', placeholder='input your mobile phone number without hyphens')
     NFormItem(label='age', path='age', required='')
       NInput(v-model:value='UserInput.age', placeholder='Input your age')
-  .nButton
-    NButton(type='primary', @click='save_user')  save
-    NButton(type='warning', @click='update_user')  update
-    NButton(type='error', @click='() => delete_user(users)')  delete
 
-.resultView
-  h1 Users
-  NButton(type='primary', dashed='', @click='load_data()') show
-  NTable(:bordered='true', :single-line='true')
-    thead
-      tr
-        th ID
-        th NAME
-        th EMAIL
-        th MOBILE NUMBER
-        th AGE
-    tbody
-      tr(v-for='(user,index) in users')
-        td {{ user.id }}
-        td {{ user.name }}
-        td {{ user.email }}
-        td {{ user.mobile }}
-        td {{ user.age }}
+    NButton(type='primary', @click='save_user')  save
+
 //- <div>
 //-   <h1>Input Form</h1>
 //-   <NForm ref="formRef" :model="UserInput" :rules="rules">
@@ -258,6 +278,6 @@ body {
 }
 .nButton{
   display: flex;
-  gap: 20px;
+  gap: 40px;
 }
 </style>

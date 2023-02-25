@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import {
+  NDialogProvider,
   NConfigProvider,
   NMessageProvider,
   NNotificationProvider,
@@ -13,7 +14,8 @@ import ProvideData from '../components/ProvidedData.vue'
 NConfigProvider
   NMessageProvider
     NNotificationProvider
-      ProvideData
+      NDialogProvider
+        ProvideData
 </template>
 
 <style>
