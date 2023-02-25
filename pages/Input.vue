@@ -17,11 +17,6 @@ NConfigProvider
 </template>
 
 <style>
-body {
-  padding: 16px;
-}
-tr {
-grid-auto-flow: 10px;
-}
+
 
 </style>

@@ -1,0 +1,12 @@
+mutation insert_users ($data:users_insert_input!){
+  insert_users(
+    objects:[$data]
+  )
+  {
+    returning {
+      id
+    }
+  }
+}
+
+

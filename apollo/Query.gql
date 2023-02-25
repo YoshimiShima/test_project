@@ -1,5 +1,5 @@
-query models {
-  models(order_by: { id: asc }) {
+query users {
+  users(order_by: { id: asc }) {
     id
     name
     email

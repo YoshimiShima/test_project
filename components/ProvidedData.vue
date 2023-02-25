@@ -4,20 +4,22 @@ import {
   NFormItem,
   NInput,
   NButton,
-  FormItemRule,
-  FormInst,
-  FormValidationError,
+  NSpace,
+  // FormItemRule,
+  // FormInst,
+  // FormValidationError,
   NTable,
   useMessage,
-  FormRules
+  // FormRules
 } from 'naive-ui';
 import Query from '../apollo/Query.gql'
-import InsertModel from '../apollo/InsertModel.gql'
-import UpdateModel from '../apollo/UpdateModel.gql'
+import InsertUser from '../apollo/InsertUser.gql'
+import UpdateUser from '../apollo/UpdateUser.gql'
+import DeleteUser from '../apollo/DeleteUser.gql'
 // import { Script } from 'zhead';
 
 
-interface ModelType {
+interface UserType {
   id: string | null;
   name: string | null;
   email: string | null;
@@ -25,9 +27,9 @@ interface ModelType {
   age: string | null;
 }
 
-const models = ref([])
+const users = ref([])
 
-const ModelInput = ref<ModelType> ({
+const UserInput = ref<UserType> ({
   id: '',
   name: '',
   email: '',
@@ -117,14 +119,13 @@ const rules: FormRules = {
 };
 const load_data = (async() => {
   const { data } = await useAsyncQuery(Query)
-  if(data.value?.models){
-    models.value = data.value.models
+  if(data.value?.users){
+    users.value = data.value.users
   }
 })
 
-const { mutate } = useMutation(InsertModel)
-
-const save = (async () => {
+const { mutate: insertUser } = useMutation(InsertUser)
+const save_user = (async () => {
   formRef.value?.validate((errors) => {
     if (!errors) {
       console.log(errors);
@@ -134,84 +135,129 @@ const save = (async () => {
       message.error('Invalid')
     }
   })
-  const result = await mutate({ data: ModelInput.value })
-  console.log("result", result)
+  const insertResult = await insertUser({ data: UserInput.value })
+  console.log("insert result", insertResult)
 });
 
-// const submitForm = () => {
-//   formRef.value?.validate((errors) => {
-//     if (!errors) {
-//       console.log(errors);
-//       message.success('Valid')
-//     } else {
-//       console.log(errors);
-//       message.error('Invalid')
-//     }
+const { mutate: updateUser } = useMutation(UpdateUser)
+const update_user = (async () => {
+  const updateResult = await updateUser({ data: UserInput.value })
+});
+
+const { mutate: deleteUser } = useMutation(DeleteUser);
+// const delete_user = async (user) => {
+//   console.log(DeleteUser.value)
+//   const deleteResult = await deleteUser({ variables: { id: user.id } })
+//   console.log("delete result", deleteResult)
+// }
+
+// async function handleDeleteUser(id: number) {
+//   const result = await deleteUser({
+//     variables: { id },
 //   });
-// };
+// }
+const delete_user = async (user) => {
+  const deleteResult = await deleteUser({
+    variables: { id: user.value.id }
+  })
+  console.log("delete result", deleteResult)
+}
+
 
 </script>
 
-<template>
-  <!-- //- NForm(ref='formRef', :model='model', :rules='rules')
-  //-   NFormItem(label='name', path='name', required='')
-  //-     NInput(v-model:value='model.name', placeholder='input your full name', width='200px')
-  //-   NFormItem(label='email', path='email', required='')
-  //-     NInput(v-model:value='model.email', placeholder='input your email')
-  //-   NFormItem(label='mobile-phone', path='mobile', required='')
-  //-     NInput(v-model:value='model.mobile', placeholder='input your mobile phone number without hyphens')
-  //-   NFormItem(label='birthday', path='birthDate', required='')
-  //-     NDatePicker(v-model:value='model.birthDate', type='date', placeholder='choose your birthday')
-  //-   NButton(type='primary', @click='submitForm')| send -->
-<div>
-  <h1>Input Form</h1>
-  <NForm ref="formRef" :model="ModelInput" :rules="rules">
-    <NFormItem label="id" path="id" required>
-      <NInput v-model:value="ModelInput.id" placeholder="input your id number"></NInput>
-    </NFormItem>
-    <NFormItem label="name" path="name" required>
-      <NInput v-model:value="ModelInput.name" placeholder="input your full name"></NInput>
-    </NFormItem>
-    <NFormItem label="email" path="email" required>
-      <NInput v-model:value="ModelInput.email" placeholder="input your email"></NInput>
-    </NFormItem>
-    <NFormItem label="mobile-phone" path="mobile" required>
-      <NInput v-model:value="ModelInput.mobile" placeholder="input your mobile phone number without hyphens"></NInput>
-    </NFormItem>
-    <NFormItem label="age" path="age" required>
-      <NInput v-model:value="ModelInput.age" placeholder="Input your age"></NInput>
-    </NFormItem>
-      <NButton type="primary" @click="save"> save</NButton>
-  </NForm>
-<div>
-  <h2>Users</h2>
-  <NButton type="primary" dashed @click='load_data()'>show</NButton>
-  <NTable :bordered="true" :single-line="true">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>NAME</th>
-        <th>EMAIL</th>
-        <th>MOBILE NUMBER</th>
-        <th>AGE</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="(model,index) in models">
-        <td>{{ model.id }}</td>
-        <td>{{ model.name }}</td>
-        <td>{{ model.email }}</td>
-        <td>{{ model.mobile }}</td>
-        <td>{{ model.age }}</td>
-      </tr>
-    </tbody>
-  </NTable>
-</div>
-</div>
-  </template>
+<template lang="pug">
+.inputForm
+  h1 Input Form
+  NForm(ref='formRef', :model='UserInput', :rules='rules')
+    NFormItem(label='id', path='id', required='')
+      NInput(v-model:value='UserInput.id', placeholder='input your id number')
+    NFormItem(label='name', path='name', required='')
+      NInput(v-model:value='UserInput.name', placeholder='input your name')
+    NFormItem(label='email', path='email', required='')
+      NInput(v-model:value='UserInput.email', placeholder='input your email')
+    NFormItem(label='mobile-phone', path='mobile', required='')
+      NInput(v-model:value='UserInput.mobile', placeholder='input your mobile phone number without hyphens')
+    NFormItem(label='age', path='age', required='')
+      NInput(v-model:value='UserInput.age', placeholder='Input your age')
+  .nButton
+    NButton(type='primary', @click='save_user')  save
+    NButton(type='warning', @click='update_user')  update
+    NButton(type='error', @click='() => delete_user(users)')  delete
+
+.resultView
+  h1 Users
+  NButton(type='primary', dashed='', @click='load_data()') show
+  NTable(:bordered='true', :single-line='true')
+    thead
+      tr
+        th ID
+        th NAME
+        th EMAIL
+        th MOBILE NUMBER
+        th AGE
+    tbody
+      tr(v-for='(user,index) in users')
+        td {{ user.id }}
+        td {{ user.name }}
+        td {{ user.email }}
+        td {{ user.mobile }}
+        td {{ user.age }}
+//- <div>
+//-   <h1>Input Form</h1>
+//-   <NForm ref="formRef" :model="UserInput" :rules="rules">
+//-     <NFormItem label="id" path="id" required>
+//-       <NInput v-model:value="UserInput.id" placeholder="input your id number"></NInput>
+//-     </NFormItem>
+//-     <NFormItem label="name" path="name" required>
+//-       <NInput v-model:value="UserInput.name" placeholder="input your full name"></NInput>
+//-     </NFormItem>
+//-     <NFormItem label="email" path="email" required>
+//-       <NInput v-model:value="UserInput.email" placeholder="input your email"></NInput>
+//-     </NFormItem>
+//-     <NFormItem label="mobile-phone" path="mobile" required>
+//-       <NInput v-model:value="UserInput.mobile" placeholder="input your mobile phone number without hyphens"></NInput>
+//-     </NFormItem>
+//-     <NFormItem label="age" path="age" required>
+//-       <NInput v-model:value="UserInput.age" placeholder="Input your age"></NInput>
+//-     </NFormItem>
+//-       <NButton type="primary" @click="save"> save </NButton>
+//-       <NButton type="warning" @click="edit"> edit </NButton>
+//-       <NButton type="error" @click="delete"> delete </NButton>
+//-   </NForm>
+//- </div>
+//- <div>
+//-   <h1>Users</h1>
+//-   <NButton type="primary" dashed @click='load_data()'>show</NButton>
+//-   <NTable :bordered="true" :single-line="true">
+//-     <thead>
+//-       <tr>
+//-         <th>ID</th>
+//-         <th>NAME</th>
+//-         <th>EMAIL</th>
+//-         <th>MOBILE NUMBER</th>
+//-         <th>AGE</th>
+//-       </tr>
+//-     </thead>
+//-     <tbody>
+//-       <tr v-for="(user,index) in users">
+//-         <td>{{ user.id }}</td>
+//-         <td>{{ user.name }}</td>
+//-         <td>{{ user.email }}</td>
+//-         <td>{{ user.mobile }}</td>
+//-         <td>{{ user.age }}</td>
+//-       </tr>
+//-     </tbody>
+//-   </NTable>
+//- </div>
+</template>
 
 <style>
-.NInput {
-  width: 200px;
+body {
+  padding: 16px;
+}
+.nButton{
+  display: flex;
+  gap: 20px;
 }
 </style>
