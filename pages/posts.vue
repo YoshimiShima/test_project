@@ -3,43 +3,33 @@ import {
   NConfigProvider,
   NMessageProvider,
   NNotificationProvider,
+  NTable
 } from 'naive-ui'
 
 
 import ProvideData from '../components/ProvideData.vue'
 
-import UserQuery from '../apollo/UserQuery.gql'
-import PostQuery from '../apollo/PostQuery.gql'
-import InsertUser from '../apollo/InsertUser.gql'
-import InsertPost from '../apollo/InsertPost.gql'
+import Query from '../apollo/Query.gql'
+import InsertModel from '../apollo/InsertModel.gql'
+import UpdateModel from '../apollo/UpdateModel.gql'
 
 
-interface User {
+interface Model {
   id: number | null;
   name: string | null;
-  age: number | null;
-  gender: string | null;
-  address: string | null;
-  occupation: string | null;
-}
-interface Post {
-  post: string | null;
+  email: string | null;
+  mobile_number: string | null;
+  birth_date: number | null;
 }
 
-const users = ref([])
-const posts = ref([])
+const models = ref([])
 
-const UserInput = ref({
+const ModelInput = ref({
   id: '',
   name: '',
-  age: '',
-  gender: '',
-  occupation: '',
-  address: '',
-});
-const PostInput = ref({
-  post: '',
-  user_id: ''
+  email: '',
+  mobile_number: '',
+  birth_date: ''
 });
 
 // const variables = (UserInput.value)
@@ -53,46 +43,58 @@ const PostInput = ref({
 //   post: PostInput.value
 // };
 
-const load_data = (async() => {
-  const userData = await useAsyncQuery(UserQuery)
-  if(userData.data.value?.users){
-    users.value = userData.data.value.users
-  }
-  const postData = await useAsyncQuery(PostQuery)
-  if(postData.data.value?.posts){
-    posts.value = postData.data.value.posts
-  }
-
-})
 // const load_data = (async() => {
-//   const { data } = await useAsyncQuery(query)
-//   if(data.value?.users){
-//     users.value = data.value.users
+//   const userData = await useAsyncQuery(UserQuery)
+//   if(userData.data.value?.users){
+//     users.value = userData.data.value.users
 //   }
-// })
+//   const postData = await useAsyncQuery(PostQuery)
+//   if(postData.data.value?.posts){
+//     posts.value = postData.data.value.posts
+//   }
 
-const { mutate: insertUser } = useMutation(InsertUser)
-const { mutate: insertPost } = useMutation(InsertPost)
+// })
+const load_data = (async() => {
+  const { data } = await useAsyncQuery(Query)
+  if(data.value?.models){
+    models.value = data.value.models
+  }
+})
+
+const { mutate } = useMutation(InsertModel)
+const save = (async () => {
+  const result = await mutate({ data: ModelInput.value })
+  console.log("result", result)
+});
+  // const { mutate: insertPost } = useMutation(InsertPost)
 
 // const { mutate: post } = useMutation(InsertPost, PostInput);
 //   (async () => {
 //     refetchQueries: PostQuery
 //   })();
+  // const save = async () => {
+  //   const userResult = await insertUser( {data:UserInput.value })
+  //   console.log("user result", userResult)
+  // const PostInputValue = await insertPost({ user_id: userResult.id } )
+  // const postInputValue = {
+  //   ...PostInput.value,
+  //   user_id: userResult.id
+  // }
 
-const save = async () => {
-  const userResult = await insertUser( {data:UserInput.value })
-  console.log("user result", userResult)
-    ※return `${id} is ${posts.user_id}`;
-  const postResult = await insertPost({
-    data: PostInput.value
-  })
-  ※const userId = userResult.data.InsertUser.id
-  console.log("post result", postResult)
+  // const postResult = await insertPost({
+  //   data: PostInput.value
+  // })
+  // console.log("post result", postResult)
   // const result = await mutate({ variables })
   //   refetchQueries: UserQuery
-}
+
 
 load_data
+const { mutate: updateModel } = useMutation(UpdateModel)
+
+const editModel = async () => {
+  const updateResult = await updateModel({ data: ModelInput.value })
+}
 
 // const apolloClient = provideApolloClient()
 // provide('apollo', apolloClient)
@@ -110,53 +112,43 @@ load_data
 </script>
 
 <template lang="pug">
-NconfigProvider
+NConfigProvider
   NMessageProvider
     NNotificationProvider
       ProvideData
     div
       h1 input form
       table
-        tr
-          th ID
-          th name
-          th age
-          th gender
-          th occupation
-          th address
-          th post
-          th edit
-        tr(v-for='(user,index) in users')
-          td {{ user.id }}
-          td {{ user.name }}
-          td {{ user.age }}
-          td {{ user.gender }}
-          td {{ user.occupation }}
-          td {{ user.address }}
-          tr(v-for='(post,index) in user.posts')
-            td {{ post.post }}
-            td
-            td
-      button(@click='load_data()') query
-      //- button(@click="editUser(user)") edit
-      //- button(@click="deleteUser(user)") delete
+        tbody
+          tr
+            th ID
+            th name
+            th email
+            th mobile_number
+            th birth_date
+          tr(v-for='(model,index) in models')
+            td {{ model.id }}
+            td {{ model.name }}
+            td {{ model.email }}
+            td {{ model.mobile_number }}
+            td {{ model.birth_date }}
 
-  div
-    h2 Insert User
+      button(@click='load_data()') query
+      button(@click="editModel()") edit
+      button(@click="deleteModel()") delete
+
+    div
+      h2 Insert User
       div
-        input(v-model='UserInput.id', type='number', placeholder='id')
+        input(v-model='ModelInput.id', type='number', placeholder='id')
       div
-        input(v-model='UserInput.name', type='text', placeholder='name')
+        input(v-model='ModelInput.name', type='text', placeholder='name')
       div
-        input(v-model='UserInput.age', type='number', placeholder='age')
+        input(v-model='ModelInput.email', type='text', placeholder='email')
       div
-        input(v-model='UserInput.gender', type='text', placeholder='gender')
+        input(v-model='ModelInput.mobile_number', type='text', placeholder='mobile number')
       div
-        input(v-model='UserInput.occupation', type='text', placeholder='occupation')
-      div
-        input(v-model='UserInput.address', type='text', placeholder='address')
-      div
-        textarea(v-model='UserInput.post', cols="30", rows="10", type='text', placeholder='post')
+        input(v-model='ModelInput.birth_date', type='date', placeholder='birth date')
       div
         button(@click='save') save
 

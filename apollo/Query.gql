@@ -1,0 +1,9 @@
+query models {
+  models(order_by: { id: asc }) {
+    id
+    name
+    email
+    mobile
+    age
+  }
+}

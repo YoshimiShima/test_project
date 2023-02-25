@@ -1,0 +1,12 @@
+mutation insert_models ($data:models_insert_input!){
+  insert_models(
+    objects:[$data]
+  )
+  {
+    returning {
+      id
+    }
+  }
+}
+
+
