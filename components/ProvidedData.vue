@@ -18,7 +18,7 @@ import InsertUser from '../apollo/InsertUser.gql'
 import UpdateUser from '../apollo/UpdateUser.gql'
 import DeleteUser from '../apollo/DeleteUser.gql'
 import { createEmitAndSemanticDiagnosticsBuilderProgram, updateSpreadAssignment } from 'typescript';
-// import { Script } from 'zhead';
+import { Script } from 'zhead';
 
 
 interface UserType {
@@ -43,7 +43,7 @@ const UserInput = ref<UserType> ({
 const formRef = ref<FormInst | null>(null)
 const message = useMessage()
 const dialog = useDialog()
-const isEdit = ref(false)
+const editingRow = ref(false)
 const UserEdit = reactive({
       name: '',
       email: '',
@@ -153,11 +153,11 @@ const save_user = (async () => {
 });
 
 const edit = (user) => {
-  isEdit.value = true
-  UserEdit.name = user.name
-  UserEdit.email = user.email
-  UserEdit.mobile = user.mobile
-  UserEdit.age = user.age
+  editingRow.value = true
+  user.name = UserEdit.name
+  user.email = UserEdit.email
+  user.mobile = UserEdit.mobile
+  user.age = UserEdit.age
 }
 const { mutate: updateUser } = useMutation(UpdateUser)
 const update_user = async (user) => {
@@ -224,17 +224,17 @@ const handleButtonClick = async (user) => {
     <tbody>
       <tr v-for="(user,index) in users" :key="user.id">
         <td>{{ user.id }}</td>
-        <td v-if="!isEdit">{{ user.name }}</td>
-        <NInput v-if="isEdit" v-model:value="UserEdit.name"></NInput>
-        <td v-if="!isEdit">{{ user.email }}</td>
-        <NInput v-if="isEdit" v-model:value="UserEdit.email"></NInput>
-        <td v-if="!isEdit">{{ user.mobile }}</td>
-        <NInput v-if="isEdit" v-model:value="UserEdit.mobile"></NInput>
-        <td v-if="!isEdit">{{ user.age }}</td>
-        <NInput v-if="isEdit" v-model:value="UserEdit.age"></NInput>
-        <div class="nButton">
-          <NButton type="warning" v-if="!isEdit" @click="edit(user)"> edit</NButton>
-          <NButton type="primary" v-if="isEdit" @click="update_user(UserEdit)"> update </NButton>
+        <td v-if="!editingRow">{{ user.name }}</td>
+        <NInput v-if="editingRow" v-model:value="user.name"></NInput>
+        <td v-if="!editingRow">{{ user.email }}</td>
+        <NInput v-if="editingRow" v-model:value="user.email"></NInput>
+        <td v-if="!editingRow">{{ user.mobile }}</td>
+        <NInput v-if="editingRow" v-model:value="user.mobile"></NInput>
+        <td v-if="!editingRow">{{ user.age }}</td>
+        <NInput v-if="editingRow" v-model:value="user.age"></NInput>
+          <div class="nButton">
+          <NButton type="warning" v-if="!editingRow" @click="edit(user)"> edit</NButton>
+          <NButton type="primary" v-if="editingRow" @click="update_user(user)"> update </NButton>
           <NButton type="error" @click="handleButtonClick(user)"> delete</NButton>
         </div>
       </tr>
