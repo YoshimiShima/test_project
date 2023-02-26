@@ -7,7 +7,6 @@ import {
   NSpace,
   FormItemRule,
   FormInst,
-  FormValidationError,
   NTable,
   useDialog,
   useMessage,
@@ -169,7 +168,7 @@ const update_user = (async () => {
 
 const { mutate: deleteUser } = useMutation(DeleteUser);
 const handleButtonClick = async (user) => {
-  const { chosenResult } = await dialog.success({
+  const chosenResult = await dialog.success({
     title: 'Delete User',
     content: 'Are you sure?',
     positiveText: 'Yes',
@@ -177,22 +176,29 @@ const handleButtonClick = async (user) => {
     maskClosable: false,
     onPositiveClick: () => {
       message.success('User deleted successfully')
-      return { chosenResult: true }
+      try {
+        const deleteResult = deleteUser({ id: user.id })
+        console.log("delete result", deleteResult)
+        load_data
+      } catch (error) {
+        console.error(error)
+        message.error('Failed to delete user')
+    }
     },
     onNegativeClick: () => {
       message.error('Failed to delete user')
     }
   });
-  if (chosenResult === true ) {
-    try {
-      const deleteResult = await deleteUser(id: user.id)
-      console.log("delete result", deleteResult)
-      await load_data
-    } catch (error) {
-      console.error(error)
-      message.error('Failed to delete user')
-    }
-  }
+  // if (chosenResult === true ) {
+  //   try {
+  //     const deleteResult = await deleteUser(user.id)
+  //     console.log("delete result", deleteResult)
+  //     await load_data
+  //   } catch (error) {
+  //     console.error(error)
+  //     message.error('Failed to delete user')
+  //   }
+  // }
 }
 
 </script>
@@ -237,8 +243,8 @@ const handleButtonClick = async (user) => {
     </tbody>
   </NTable>
 </div>
-<div class="inputForm">
-    <h1>Input Form</h1>
+  <h1>Input Form</h1>
+  <NSpace class="inputForm">
     <NForm ref="formRef" :model="UserInput" :rules="rules">
         <NFormItem label="id" path="id" required>
             <NInput v-model:value="UserInput.id" placeholder="input your id number"></NInput>
@@ -256,8 +262,9 @@ const handleButtonClick = async (user) => {
             <NInput v-model:value="UserInput.age" placeholder="Input your age"></NInput>
         </NFormItem>
         <NButton type="primary" @click="save_user"> save</NButton>
-    </NForm>
-</div>
+      </NForm>
+  </NSpace>
+
 
 <!-- .resultView
   h1 Users

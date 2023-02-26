@@ -116,7 +116,7 @@ const editModel = async () => {
 NConfigProvider
   NMessageProvider
     NNotificationProvider
-      ProvideData
+      //- ProvideData
     div
       h1 input form
       table
