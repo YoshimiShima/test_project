@@ -17,6 +17,7 @@ import Query from '../apollo/Query.gql'
 import InsertUser from '../apollo/InsertUser.gql'
 import UpdateUser from '../apollo/UpdateUser.gql'
 import DeleteUser from '../apollo/DeleteUser.gql'
+import { createEmitAndSemanticDiagnosticsBuilderProgram } from 'typescript';
 // import { Script } from 'zhead';
 
 
@@ -29,6 +30,7 @@ interface UserType {
 }
 
 const users = ref([])
+const editUser = ref();
 
 const UserInput = ref<UserType> ({
   id: '',
@@ -141,33 +143,43 @@ const save_user = (async () => {
   console.log("insert result", insertResult)
 });
 
+
 const { mutate: updateUser } = useMutation(UpdateUser)
 const update_user = (async () => {
-  const updateResult = await updateUser({ data: UserInput.value })
-});
+  try {
+    const updateResult = await updateUser({
+      variables: {
+        id: editUser.id,
+        name: editUser.name,
+        email: editUser.email,
+        mobile: editUser.mobile,
+        age: editUser.age
+      }
+    });
+    console.log("update result", updateResult);
+    message.success("User updated.");
+    editUser.value = null;
+  } catch (error) {
+    console.log("update error", error);
+    message.error("Failed to update user.");
+  }
+})
+
+
 
 const { mutate: deleteUser } = useMutation(DeleteUser);
-// const delete_user = async (user) => {
-//   console.log(DeleteUser.value)
-//   const deleteResult = await deleteUser({ variables: { id: user.id } })
-//   console.log("delete result", deleteResult)
-// }
-
-// async function handleDeleteUser(id: number) {
-//   const result = await deleteUser({
-//     variables: { id },
-//   });
-// }
 const handleButtonClick = async (user) => {
-  const choseResult = await dialog.success({
+  const positiveText = true
+  const chosenResult = await dialog.success({
     title: 'Delete User',
     content: 'Are you sure?',
     positiveText: 'Yes',
     negativeText: 'No',
-    maskClosable: false
-  })
+    maskClosable: false,
+  });
   console.log(user.id)
-    if (choseResult === 'Yes') {
+  if (value === true) {
+    console.log(Boolean)
     try {
       const deleteResult = await deleteUser(user.id)
       console.log("delete result", deleteResult)
@@ -178,7 +190,7 @@ const handleButtonClick = async (user) => {
     }
   }
 }
-
+load_data
 
 </script>
 
@@ -194,7 +206,7 @@ const handleButtonClick = async (user) => {
         th EMAIL
         th MOBILE NUMBER
         th AGE
-        th --EDIT--  /  ==delete==
+        th -- EDIT ---  /  == delete ==
     tbody
       tr(v-for='(user,index) in users')
         td {{ user.id }}
@@ -203,8 +215,17 @@ const handleButtonClick = async (user) => {
         td {{ user.mobile }}
         td {{ user.age }}
         .nButton
-          NButton(type='warning', @click='update_user')  update
+          NButton(type='warning', @click='toggle(index)')  edit
           NButton(type='error', @click='handleButtonClick(user)')  delete
+      //- div(v-show='editUser')
+      //-   h3 Edit User
+      //-   p ID: {{ editUser.id }}
+      //-   p NAME: {{ editUser.name }}
+      //-   p EMAIL: {{ editUser.email }}
+      //-   p MOBILE NUMBER: {{ editUser.mobile }}
+      //-   p AGE: {{ editUser.age }}
+      //-   NButton(type='primary', @click='toggle(null)') Cancel
+      //-   NButton(type='success', @click='update_user') Save
 
 
 .inputForm

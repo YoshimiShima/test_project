@@ -1,4 +1,4 @@
-mutation update_users($id: Int!, $set: users_set_input!) {
+mutation update_users($id: Int!, $name: String!, $email: String!, $mobile: String!, $age: Int!) {
   update_users(where: { id: { _eq: $id } }, _set: $data) {
     affected_rows
   }
