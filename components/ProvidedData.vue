@@ -155,7 +155,7 @@ const save_user = (async () => {
 
 const edit = (user) => {
   editingRow.value = user.id
-  console.log(user.id)
+  console.log(user.name)
 }
 const { mutate: updateUser } = useMutation(UpdateUser)
 const update_user = async (user) => {
@@ -230,15 +230,16 @@ const handleButtonClick = async (user) => {
           <td>{{ user.age }}</td>
         </template>
         <template v-else>
-          <NInput v-model:value="user.name"></NInput>
-          <NInput v-model:value="user.email"></NInput>
-          <NInput v-model:value="user.mobile"></NInput>
-          <NInput v-model:value="user.age"></NInput>
+          <td><NInput v-model:value="user.name"></NInput></td>
+          <td><NInput v-model:value="user.email"></NInput></td>
+          <td><NInput v-model:value="user.mobile"></NInput></td>
+          <td><NInput v-model:value="user.age"></NInput></td>
+          <NButton type="primary" v-if="editingRow" @click="update_user(user)"> update </NButton>
         </template>
           <div class="nButton">
           <NButton type="warning" v-if="!editingRow" @click="edit(user)"> edit</NButton>
-          <NButton type="primary" v-if="editingRow" @click="update_user(user)"> update </NButton>
-          <NButton type="error" @click="handleButtonClick(user)"> delete</NButton>
+          <!-- <NButton type="primary" v-if="editingRow" @click="update_user(user)"> update </NButton> -->
+          <NButton type="error" v-if="!editingRow" @click="handleButtonClick(user)"> delete</NButton>
         </div>
       </tr>
     </tbody>
