@@ -4,6 +4,7 @@ import {
   NFormItem,
   NInput,
   NButton,
+  NModal,
   NSpace,
   FormItemRule,
   FormInst,
@@ -16,7 +17,7 @@ import Query from '../apollo/Query.gql'
 import InsertUser from '../apollo/InsertUser.gql'
 import UpdateUser from '../apollo/UpdateUser.gql'
 import DeleteUser from '../apollo/DeleteUser.gql'
-import { createEmitAndSemanticDiagnosticsBuilderProgram } from 'typescript';
+import { createEmitAndSemanticDiagnosticsBuilderProgram, updateSpreadAssignment } from 'typescript';
 // import { Script } from 'zhead';
 
 
@@ -42,6 +43,13 @@ const UserInput = ref<UserType> ({
 const formRef = ref<FormInst | null>(null)
 const message = useMessage()
 const dialog = useDialog()
+const isEdit = ref(false)
+const UserEdit = reactive({
+      name: '',
+      email: '',
+      mobile: '',
+      age: ''
+    })
 
 const rules: FormRules = {
   id:[
@@ -120,6 +128,8 @@ const rules: FormRules = {
     }
   ],
 };
+
+
 const load_data = (async() => {
   const { data } = await useAsyncQuery(Query)
   if(data.value?.users){
@@ -142,27 +152,30 @@ const save_user = (async () => {
   console.log("insert result", insertResult)
 });
 
-
+const edit = (user) => {
+  isEdit.value = true
+  UserEdit.name = user.name
+  UserEdit.email = user.email
+  UserEdit.mobile = user.mobile
+  UserEdit.age = user.age
+}
 const { mutate: updateUser } = useMutation(UpdateUser)
-const update_user = (async () => {
+const update_user = async (user) => {
   try {
     const updateResult = await updateUser({
-      variables: {
-        id: editUser.id,
-        name: editUser.name,
-        email: editUser.email,
-        mobile: editUser.mobile,
-        age: editUser.age
-      }
+      id: user.id,
+      name: UserEdit.name,
+      email: UserEdit.email,
+      mobile: UserEdit.mobile,
+      age: UserEdit.age
     });
     console.log("update result", updateResult);
-    message.success("User updated.");
-    editUser.value = null;
+    message.success("User updated");
   } catch (error) {
     console.log("update error", error);
-    message.error("Failed to update user.");
+    message.error("Failed to update user");
   }
-})
+}
 
 
 
@@ -183,22 +196,12 @@ const handleButtonClick = async (user) => {
       } catch (error) {
         console.error(error)
         message.error('Failed to delete user')
-    }
+      }
     },
     onNegativeClick: () => {
       message.error('Failed to delete user')
     }
   });
-  // if (chosenResult === true ) {
-  //   try {
-  //     const deleteResult = await deleteUser(user.id)
-  //     console.log("delete result", deleteResult)
-  //     await load_data
-  //   } catch (error) {
-  //     console.error(error)
-  //     message.error('Failed to delete user')
-  //   }
-  // }
 }
 
 </script>
@@ -219,27 +222,22 @@ const handleButtonClick = async (user) => {
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(user,index) in users">
+      <tr v-for="(user,index) in users" :key="user.id">
         <td>{{ user.id }}</td>
-        <td>{{ user.name }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.mobile }}</td>
-        <td>{{ user.age }}</td>
+        <td v-if="!isEdit">{{ user.name }}</td>
+        <NInput v-if="isEdit" v-model:value="UserEdit.name"></NInput>
+        <td v-if="!isEdit">{{ user.email }}</td>
+        <NInput v-if="isEdit" v-model:value="UserEdit.email"></NInput>
+        <td v-if="!isEdit">{{ user.mobile }}</td>
+        <NInput v-if="isEdit" v-model:value="UserEdit.mobile"></NInput>
+        <td v-if="!isEdit">{{ user.age }}</td>
+        <NInput v-if="isEdit" v-model:value="UserEdit.age"></NInput>
         <div class="nButton">
-          <NButton type="warning" @click="toggle(index)"> edit</NButton>
+          <NButton type="warning" v-if="!isEdit" @click="edit(user)"> edit</NButton>
+          <NButton type="primary" v-if="isEdit" @click="update_user(UserEdit)"> update </NButton>
           <NButton type="error" @click="handleButtonClick(user)"> delete</NButton>
         </div>
       </tr>
-            <!-- <div v-show="editUser">
-                <h3>Edit User</h3>
-                <p>ID: {{ editUser.id }}</p>
-                <p>NAME: {{ editUser.name }}</p>
-                <p>EMAIL: {{ editUser.email }}</p>
-                <p>MOBILE NUMBER: {{ editUser.mobile }}</p>
-                <p>AGE: {{ editUser.age }}</p>
-                <NButton type="primary" @click="toggle(null)">Cancel</NButton>
-                <NButton type="success" @click="update_user">Save</NButton>
-            </div> -->
     </tbody>
   </NTable>
 </div>
@@ -261,7 +259,7 @@ const handleButtonClick = async (user) => {
         <NFormItem label="age" path="age" required>
             <NInput v-model:value="UserInput.age" placeholder="Input your age"></NInput>
         </NFormItem>
-        <NButton type="primary" @click="save_user"> save</NButton>
+        <NButton type="primary" @click="save_user"> save </NButton>
       </NForm>
   </NSpace>
 
