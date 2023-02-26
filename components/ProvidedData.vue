@@ -44,12 +44,12 @@ const formRef = ref<FormInst | null>(null)
 const message = useMessage()
 const dialog = useDialog()
 const editingRow = ref(false)
-const UserEdit = reactive({
-      name: '',
-      email: '',
-      mobile: '',
-      age: ''
-    })
+// const UserEdit = reactive({
+//       name: '',
+//       email: '',
+//       mobile: '',
+//       age: ''
+//     })
 
 const rules: FormRules = {
   id:[
@@ -152,23 +152,22 @@ const save_user = (async () => {
   console.log("insert result", insertResult)
 });
 
+
 const edit = (user) => {
-  editingRow.value = true
-  user.name = UserEdit.name
-  user.email = UserEdit.email
-  user.mobile = UserEdit.mobile
-  user.age = UserEdit.age
+  editingRow.value = user.id
+  console.log(user.id)
 }
 const { mutate: updateUser } = useMutation(UpdateUser)
 const update_user = async (user) => {
   try {
     const updateResult = await updateUser({
       id: user.id,
-      name: UserEdit.name,
-      email: UserEdit.email,
-      mobile: UserEdit.mobile,
-      age: UserEdit.age
+      name: user.name,
+      email: user.email,
+      mobile: user.mobile,
+      age: user.age
     });
+    console.log(user.id)
     console.log("update result", updateResult);
     message.success("User updated");
   } catch (error) {
@@ -224,14 +223,18 @@ const handleButtonClick = async (user) => {
     <tbody>
       <tr v-for="(user,index) in users" :key="user.id">
         <td>{{ user.id }}</td>
-        <td v-if="!editingRow">{{ user.name }}</td>
-        <NInput v-if="editingRow" v-model:value="user.name"></NInput>
-        <td v-if="!editingRow">{{ user.email }}</td>
-        <NInput v-if="editingRow" v-model:value="user.email"></NInput>
-        <td v-if="!editingRow">{{ user.mobile }}</td>
-        <NInput v-if="editingRow" v-model:value="user.mobile"></NInput>
-        <td v-if="!editingRow">{{ user.age }}</td>
-        <NInput v-if="editingRow" v-model:value="user.age"></NInput>
+        <template v-if="user.id !== editingRow">
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.mobile }}</td>
+          <td>{{ user.age }}</td>
+        </template>
+        <template v-else>
+          <NInput v-model:value="user.name"></NInput>
+          <NInput v-model:value="user.email"></NInput>
+          <NInput v-model:value="user.mobile"></NInput>
+          <NInput v-model:value="user.age"></NInput>
+        </template>
           <div class="nButton">
           <NButton type="warning" v-if="!editingRow" @click="edit(user)"> edit</NButton>
           <NButton type="primary" v-if="editingRow" @click="update_user(user)"> update </NButton>
