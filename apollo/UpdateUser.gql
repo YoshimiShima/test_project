@@ -1,5 +1,5 @@
 mutation update_users($id: Int!, $name: String!, $email: String!, $mobile: String!, $age: Int!) {
-  update_users_by_pk(pk_columns: {id: $id}) {
+  update_users_by_pk(pk_columns: {id: $id}, _set: {name: $name, email: $email, mobile: $mobile, age: $age}) {
     id
   }
 }
