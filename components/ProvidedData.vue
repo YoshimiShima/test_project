@@ -4,7 +4,6 @@ import {
   NFormItem,
   NInput,
   NButton,
-  NModal,
   NSpace,
   FormItemRule,
   FormInst,
@@ -130,32 +129,44 @@ const rules: FormRules = {
 };
 
 
-const load_data = (async() => {
+const load_data = async() => {
   const { data } = await useAsyncQuery(Query)
   if(data.value?.users){
     users.value = data.value.users
   }
-})
+}
 
 const { mutate: insertUser } = useMutation(InsertUser)
-const save_user = (async () => {
+const save_user = async () => {
   formRef.value?.validate((errors) => {
     if (!errors) {
       console.log(errors);
-      message.success('Valid')
+      message.success('Successfully created User data')
     } else {
       console.log(errors);
-      message.error('Invalid')
+      message.error('Failed to create User data')
     }
   })
   const insertResult = await insertUser({ data: UserInput.value })
   console.log("insert result", insertResult)
-});
+  UserInput.value = {
+  id: '',
+  name: '',
+  email: '',
+  mobile: '',
+  age: ''
+};
+  load_data();
+};
 
 
 const edit = (user) => {
   editingRow.value = user.id
   console.log(user.name)
+}
+const cancel = () => {
+  editingRow.value = false
+  load_data
 }
 const { mutate: updateUser } = useMutation(UpdateUser)
 const update_user = async (user) => {
@@ -170,6 +181,8 @@ const update_user = async (user) => {
     console.log(user.id)
     console.log("update result", updateResult);
     message.success("User updated");
+    load_data();
+    editingRow.value = false
   } catch (error) {
     console.log("update error", error);
     message.error("Failed to update user");
@@ -186,12 +199,12 @@ const handleButtonClick = async (user) => {
     positiveText: 'Yes',
     negativeText: 'No',
     maskClosable: false,
-    onPositiveClick: () => {
+    onPositiveClick: async() => {
       message.success('User deleted successfully')
       try {
-        const deleteResult = deleteUser({ id: user.id })
+        const deleteResult = await deleteUser({ id: user.id })
         console.log("delete result", deleteResult)
-        load_data
+        await load_data();
       } catch (error) {
         console.error(error)
         message.error('Failed to delete user')
@@ -235,10 +248,10 @@ const handleButtonClick = async (user) => {
           <td><NInput v-model:value="user.mobile"></NInput></td>
           <td><NInput v-model:value="user.age"></NInput></td>
           <NButton type="primary" v-if="editingRow" @click="update_user(user)"> update </NButton>
+          <NButton type="info" v-if="editingRow" @click="cancel()"> cancel </NButton>
         </template>
           <div class="nButton">
           <NButton type="warning" v-if="!editingRow" @click="edit(user)"> edit</NButton>
-          <!-- <NButton type="primary" v-if="editingRow" @click="update_user(user)"> update </NButton> -->
           <NButton type="error" v-if="!editingRow" @click="handleButtonClick(user)"> delete</NButton>
         </div>
       </tr>
