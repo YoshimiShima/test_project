@@ -166,7 +166,7 @@ const edit = (user) => {
 }
 const cancel = () => {
   editingRow.value = false
-  load_data
+  load_data()
 }
 const { mutate: updateUser } = useMutation(UpdateUser)
 const update_user = async (user) => {
