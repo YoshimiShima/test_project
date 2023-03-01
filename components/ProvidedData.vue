@@ -243,10 +243,10 @@ const handleButtonClick = async (user) => {
           <td>{{ user.age }}</td>
         </template>
         <template v-else>
-          <td><NInput v-model:value="user.name"></NInput></td>
-          <td><NInput v-model:value="user.email"></NInput></td>
-          <td><NInput v-model:value="user.mobile"></NInput></td>
-          <td><NInput v-model:value="user.age"></NInput></td>
+          <td><NInput v-model:value="user.name" path="name" required></NInput></td>
+          <td><NInput v-model:value="user.email" path="email"></NInput></td>
+          <td><NInput v-model:value="user.mobile" path="mobile"></NInput></td>
+          <td><NInput v-model:value="user.age" path="age"></NInput></td>
           <NButton type="primary" v-if="editingRow" @click="update_user(user)"> update </NButton>
           <NButton type="info" v-if="editingRow" @click="cancel()"> cancel </NButton>
         </template>
@@ -280,8 +280,8 @@ const handleButtonClick = async (user) => {
       </NForm>
   </NSpace>
 
-
-<!-- .resultView
+<!-- <template lang="pug">
+.resultView
   h1 Users
   NButton(type='primary', dashed='', @click='load_data()') show
   NTable(:bordered='true', :single-line='true')
@@ -327,8 +327,8 @@ const handleButtonClick = async (user) => {
     NFormItem(label='age', path='age', required='')
       NInput(v-model:value='UserInput.age', placeholder='Input your age')
 
-    NButton(type='primary', @click='save_user')  save
- -->
+    NButton(type='primary', @click='save_user')  save -->
+
 
 </template>
 

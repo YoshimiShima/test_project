@@ -13,11 +13,13 @@
     "@types/node": "^18.14.1",
     "naive-ui": "^2.34.3",
     "nuxt": "^3.2.2",
-    "vfonts": "^0.0.3"
+    "vfonts": "^0.0.3",
+    "vite-plugin-pug": "^0.3.2"
   },
   "dependencies": {
     "@css-render/vue3-ssr": "^0.15.12",
     "@nuxt/kit": "^3.2.2",
-    "pug": "^3.0.2"
+    "pug": "^3.0.2",
+    "pug-plugin": "^4.9.5"
   }
 }
