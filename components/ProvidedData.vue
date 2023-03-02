@@ -289,23 +289,23 @@ const handleButtonClick = async (user) => {
   <h1>Input Form</h1>
   <NSpace class="inputForm">
     <NForm ref="formRef" :model="UserInput" :rules="rules">
-        <NFormItem label="id" path="id" required>
-            <NInput v-model:value="UserInput.id" placeholder="input your id number"></NInput>
-        </NFormItem>
-        <NFormItem label="name" path="name" required>
-            <NInput v-model:value="UserInput.name" placeholder="input your name"></NInput>
-        </NFormItem>
-        <NFormItem label="email" path="email" required>
-            <NInput v-model:value="UserInput.email" placeholder="input your email"></NInput>
-        </NFormItem>
-        <NFormItem label="mobile-phone" path="mobile" required>
-            <NInput v-model:value="UserInput.mobile" placeholder="input your mobile phone number without hyphens"></NInput>
-        </NFormItem>
-        <NFormItem label="age" path="age" required>
-            <NInput v-model:value="UserInput.age" placeholder="Input your age"></NInput>
-        </NFormItem>
-        <NButton type="primary" @click="save_user"> save </NButton>
-      </NForm>
+      <NFormItem label="id" path="id" required>
+        <NInput v-model:value="UserInput.id" placeholder="input your id number"></NInput>
+      </NFormItem>
+      <NFormItem label="name" path="name" required>
+        <NInput v-model:value="UserInput.name" placeholder="input your name"></NInput>
+      </NFormItem>
+      <NFormItem label="email" path="email" required>
+        <NInput v-model:value="UserInput.email" placeholder="input your email"></NInput>
+      </NFormItem>
+      <NFormItem label="mobile-phone" path="mobile" required>
+        <NInput v-model:value="UserInput.mobile" placeholder="input your mobile phone number without hyphens"></NInput>
+      </NFormItem>
+      <NFormItem label="age" path="age" required>
+        <NInput v-model:value="UserInput.age" placeholder="Input your age"></NInput>
+      </NFormItem>
+      <NButton type="primary" @click="save_user"> save </NButton>
+    </NForm>
   </NSpace>
 
 <!-- <template lang="pug">
