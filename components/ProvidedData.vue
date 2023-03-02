@@ -243,30 +243,29 @@ const handleButtonClick = async (user) => {
           <td>{{ user.age }}</td>
         </template>
         <template v-else>
-          <!-- <td><NInput v-model:value="user.name" path="name" required></NInput></td>
+          <!--オリジナル <td><NInput v-model:value="user.name" path="name"></NInput></td>
           <td><NInput v-model:value="user.email" path="email"></NInput></td>
           <td><NInput v-model:value="user.mobile" path="mobile"></NInput></td>
           <td><NInput v-model:value="user.age" path="age"></NInput></td> -->
 
-          <td><NInput v-model:value="user.name" path="name" :rules="rules" required></NInput></td>
+          <!--その1 <td><NInput v-model:value="user.name" path="name" :rules="rules" required></NInput></td>
           <td><NInput v-model:value="user.email" path="email" :rules="rules" required></NInput></td>
           <td><NInput v-model:value="user.mobile" path="mobile" :rules="rules" required></NInput></td>
           <td><NInput v-model:value="user.age" path="age" :rules="rules" required></NInput></td>
           <NButton type="primary" v-if="editingRow" @click="update_user(user)"> update </NButton>
-          <NButton type="info" v-if="editingRow" @click="cancel()"> cancel </NButton>
+          <NButton type="info" v-if="editingRow" @click="cancel()"> cancel </NButton> -->
 
-          <!-- <NForm :model=user :rules="rules">
-            <td><NFormItem path="name" required>
-              <NInput v-model:value="user.name"></NInput></NFormItem></td>
-            <td><NFormItem path="email" required>
-              <NInput v-model:value="user.email"></NInput></NFormItem></td>
-            <td><NFormItem path="mobile" required>
-              <NInput v-model:value="user.mobile"></NInput></NFormItem></td>
-            <td><NFormItem path="age" required>
-              <NInput v-model:value="user.age"></NInput></NFormItem></td>
-            <NButton type="primary" v-if="editingRow" @click="update_user(user)"> update </NButton>
-            <NButton type="info" v-if="editingRow" @click="cancel()"> cancel </NButton>
-          </NForm> -->
+          <!-- その2 -->
+          <NForm ref="formRef" :model=user :rules="rules">
+            <tr>
+              <td><NInput v-model:value="user.name" path="name" required></NInput></td>
+              <td><NInput v-model:value="user.email" path="email" required></NInput></td>
+              <td><NInput v-model:value="user.mobile" path="mobile" required></NInput></td>
+              <td><NInput v-model:value="user.age" path="age" required></NInput></td>
+              <NButton type="primary" v-if="editingRow" @click="update_user(user)"> update </NButton>
+              <NButton type="info" v-if="editingRow" @click="cancel()"> cancel </NButton>
+            </tr>
+          </NForm>
         </template>
           <div class="nButton">
           <NButton type="warning" v-if="!editingRow" @click="edit(user)"> edit</NButton>
