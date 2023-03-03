@@ -5,19 +5,22 @@ import {
   NInput,
   NButton,
   NSpace,
-  FormItemRule,
-  FormInst,
   NTable,
   useDialog,
   useMessage,
+} from 'naive-ui';
+import type {
+  FormItemRule,
+  FormInst,
   FormRules
 } from 'naive-ui';
+
 import Query from '../apollo/Query.gql'
 import InsertUser from '../apollo/InsertUser.gql'
 import UpdateUser from '../apollo/UpdateUser.gql'
 import DeleteUser from '../apollo/DeleteUser.gql'
 import { createEmitAndSemanticDiagnosticsBuilderProgram, updateSpreadAssignment } from 'typescript';
-import { Script } from 'zhead';
+
 
 
 interface UserType {
@@ -218,7 +221,7 @@ const handleButtonClick = async (user) => {
 
 </script>
 
-<template>
+<!-- <template>
 <NSpace class="resultView" vertical>
   <h1>Users</h1>
   <NButton type="primary" dashed @click="load_data()">show</NButton>
@@ -243,10 +246,6 @@ const handleButtonClick = async (user) => {
           <td>{{ user.age }}</td>
         </template>
         <template v-else>
-          <!--オリジナル <td><NInput v-model:value="user.name" path="name"></NInput></td>
-          <td><NInput v-model:value="user.email" path="email"></NInput></td>
-          <td><NInput v-model:value="user.mobile" path="mobile"></NInput></td>
-          <td><NInput v-model:value="user.age" path="age"></NInput></td> -->
           <td>
             <NForm ref="formRef" :model=user :rules="rules">
               <NFormItem path="name" :rules="rules.name">
@@ -307,12 +306,12 @@ const handleButtonClick = async (user) => {
       </NFormItem>
       <NButton type="primary" @click="save_user"> save </NButton>
     </NForm>
-  </NSpace>
+  </NSpace> -->
 
-<!-- <template lang="pug">
-.resultView
-  h1 Users
-  NButton(type='primary', dashed='', @click='load_data()') show
+<template lang="pug">
+NSpace.resultView(vertical)
+  NF Users
+  NButton(type='primary', dashed, @click='load_data()') show
   NTable(:bordered='true', :single-line='true')
     thead
       tr
@@ -321,29 +320,39 @@ const handleButtonClick = async (user) => {
         th EMAIL
         th MOBILE NUMBER
         th AGE
-        th -- EDIT ---  /  == delete ==
+        th --- EDIT --- / == delete ==
     tbody
-      tr(v-for='(user,index) in users')
+      tr(v-for='(user,index) in users', :key='user.id')
         td {{ user.id }}
-        td {{ user.name }}
-        td {{ user.email }}
-        td {{ user.mobile }}
-        td {{ user.age }}
+        template(v-if='user.id !== editingRow')
+          td {{ user.name }}
+          td {{ user.email }}
+          td {{ user.mobile }}
+          td {{ user.age }}
+        template(v-else='')
+          td
+            NForm(ref='formRef', :model='user', :rules='rules')
+              NFormItem(path='name', :rules='rules.name')
+                NInput(v-model:value='user.name')
+          td
+            NForm(ref='formRef', :model='user', :rules='rules')
+              NFormItem(path='email', :rules='rules.email')
+                NInput(v-model:value='user.email')
+          td
+            NForm(ref='formRef', :model='user', :rules='rules')
+              NFormItem(path='mobile', :rules='rules.mobile')
+                NInput(v-model:value='user.mobile')
+          td
+            NForm(ref='formRef', :model='user', :rules='rules')
+              NFormItem(path='age', :rules='rules.age')
+                NInput(v-model:value='user.age')
+          NButton(type='primary', v-if='editingRow', @click='update_user(user)')  update
+          NButton(type='info', v-if='editingRow', @click='cancel()')  cancel
         .nButton
-          NButton(type='warning', @click='toggle(index)')  edit
-          NButton(type='error', @click='handleButtonClick(user)')  delete
-      div(v-show='editUser')
-        h3 Edit User
-        p ID: {{ editUser.id }}
-        p NAME: {{ editUser.name }}
-        p EMAIL: {{ editUser.email }}
-        p MOBILE NUMBER: {{ editUser.mobile }}
-        p AGE: {{ editUser.age }}
-        NButton(type='primary', @click='toggle(null)') Cancel
-        NButton(type='success', @click='update_user') Save
-
-.inputForm
-  h1 Input Form
+          NButton(type='warning', v-if='!editingRow', @click='edit(user)')  edit
+          NButton(type='error', v-if='!editingRow', @click='handleButtonClick(user)')  delete
+h1 Input Form
+NSpace.inputForm
   NForm(ref='formRef', :model='UserInput', :rules='rules')
     NFormItem(label='id', path='id', required='')
       NInput(v-model:value='UserInput.id', placeholder='input your id number')
@@ -355,16 +364,11 @@ const handleButtonClick = async (user) => {
       NInput(v-model:value='UserInput.mobile', placeholder='input your mobile phone number without hyphens')
     NFormItem(label='age', path='age', required='')
       NInput(v-model:value='UserInput.age', placeholder='Input your age')
-
-    NButton(type='primary', @click='save_user')  save -->
-
-
+    NButton(type='primary', @click='save_user')  save
 </template>
 
 <style>
-.resultView {
 
-}
 
 @media only screen and (max-width: 1000px) and (min-width: 768px) {
 
