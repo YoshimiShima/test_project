@@ -219,7 +219,7 @@ const handleButtonClick = async (user) => {
 </script>
 
 <template>
-<div class="resultView">
+<NSpace class="resultView" vertical>
   <h1>Users</h1>
   <NButton type="primary" dashed @click="load_data()">show</NButton>
   <NTable :bordered="true" :single-line="true">
@@ -285,7 +285,8 @@ const handleButtonClick = async (user) => {
       </tr>
     </tbody>
   </NTable>
-</div>
+</NSpace>
+
   <h1>Input Form</h1>
   <NSpace class="inputForm">
     <NForm ref="formRef" :model="UserInput" :rules="rules">
@@ -361,11 +362,24 @@ const handleButtonClick = async (user) => {
 </template>
 
 <style>
+.resultView {
+
+}
+
+@media only screen and (max-width: 1000px) and (min-width: 768px) {
+
+}
+@media only screen and (max-width: 767px) {}
+
 body {
   padding: 16px;
+
 }
 .nButton{
   display: flex;
-  gap: 40px;
+  gap: 20px;
+}
+.nTable{
+  width: 100%;
 }
 </style>

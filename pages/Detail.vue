@@ -11,13 +11,14 @@ car-price
 </template>
 <style>
 img{
-  width: 600px;
+  width: 800px;
   margin: 0 auto;
 }
 title-notice{
+
   color: crimson;
   font-family: cursive;
-  font-size: 36px;
+  font-size: 30px;
 }
 special-deals{
   font-family: 'Courier New', Courier, monospace;
@@ -55,10 +56,10 @@ car-price{
     margin: 0 auto;
   }
   title-notice{
-    font-size: 20px;
+    font-size: 18px;
   }
   special-deals{
-    font-size: 18px;
+    font-size: 16px;
   }
   car-explain{
     font-size: 8px;
